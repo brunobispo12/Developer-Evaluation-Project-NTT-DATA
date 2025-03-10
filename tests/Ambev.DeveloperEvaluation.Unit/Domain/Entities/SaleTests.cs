@@ -20,6 +20,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities
         {
             // Arrange
             var sale = SaleTestData.GenerateValidSale();
+            sale.AddItem(Guid.NewGuid(), 5, 100m);
 
             // Act
             var result = sale.Validate();

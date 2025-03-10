@@ -28,6 +28,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Validation
         {
             // Arrange
             var sale = SaleTestData.GenerateValidSale();
+            sale.AddItem(Guid.NewGuid(), 5, 100m);
 
             // Act
             var result = _validator.TestValidate(sale);
