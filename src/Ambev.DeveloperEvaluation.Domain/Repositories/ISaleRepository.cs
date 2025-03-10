@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Common.Helpers;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Domain.Repositories
 {
@@ -38,6 +39,20 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The sale if found, null otherwise.</returns>
         Task<Sale?> GetBySaleNumberAsync(string saleNumber, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieves all the sales with pagination and ordering support.
+        /// </summary>
+        /// <param name="pageNumber">The page number (starting at 1).</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <param name="order">
+        /// Optional ordering string (e.g., "SaleNumber desc, SaleDate asc"). 
+        /// If not provided, a default ordering is applied.
+        /// </param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A paginated list of sales.</returns>
+        Task<PaginatedList<Sale>> GetAllAsync(int pageNumber, int pageSize, string? order, CancellationToken cancellationToken = default);
+
 
         /// <summary>
         /// Deletes a sale from the repository.

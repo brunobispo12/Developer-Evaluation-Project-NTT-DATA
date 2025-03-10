@@ -1,6 +1,8 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Common.Helpers;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
 {
@@ -83,6 +85,41 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             _context.Sales.Remove(sale);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
+        }
+
+        /// <summary>
+        /// Retrieves all the sales.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>A list of all sales.</returns>
+        public async Task<List<Sale>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Sales.ToListAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Retrieves all the sales with pagination and ordering support.
+        /// </summary>
+        /// <param name="pageNumber">The page number (starting at 1).</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <param name="order">
+        /// Optional ordering string (e.g., "SaleNumber desc, SaleDate asc").
+        /// If not provided, a default ordering (by SaleDate descending) is applied.
+        /// </param>
+        public async Task<PaginatedList<Sale>> GetAllAsync(int pageNumber, int pageSize, string? order, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Sale> query = _context.Sales.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(order))
+            {
+                query = query.OrderBy(order);
+            }
+            else
+            {
+                query = query.OrderByDescending(s => s.SaleDate);
+            }
+
+            return await PaginatedList<Sale>.CreateAsync(query, pageNumber, pageSize);
         }
     }
 }
