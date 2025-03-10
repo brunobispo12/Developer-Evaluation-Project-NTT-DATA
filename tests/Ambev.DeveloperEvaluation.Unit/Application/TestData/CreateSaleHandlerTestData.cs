@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Bogus;
+﻿using Bogus;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales;
 
