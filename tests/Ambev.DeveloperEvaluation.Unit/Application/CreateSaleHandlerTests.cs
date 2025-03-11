@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoMapper;
 using FluentAssertions;
 using FluentValidation;
 using NSubstitute;
@@ -7,6 +10,7 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Unit.Application.TestData;
+using Ambev.DeveloperEvaluation.Common.DTO;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application
 {
@@ -39,9 +43,23 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 Id = Guid.NewGuid()
             };
 
+            // Create a SaleDto to be returned in the result
+            var saleDto = new SaleDto
+            {
+                Id = sale.Id,
+                SaleNumber = sale.SaleNumber,
+                SaleDate = sale.SaleDate,
+                Customer = sale.Customer,
+                Branch = sale.Branch,
+                IsCancelled = sale.IsCancelled,
+                TotalAmount = sale.TotalAmount,
+                Items = new System.Collections.Generic.List<SaleItemDto>()
+            };
+
+            // Create the result wrapping the full SaleDto
             var createSaleResult = new CreateSaleResult
             {
-                Id = sale.Id
+                Sale = saleDto
             };
 
             _mapper.Map<Sale>(command).Returns(sale);
@@ -54,7 +72,9 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
 
             // Assert
             result.Should().NotBeNull();
-            result.Id.Should().Be(sale.Id);
+            result.Sale.Should().NotBeNull();
+            result.Sale.Id.Should().Be(sale.Id);
+            result.Sale.SaleNumber.Should().Be(sale.SaleNumber);
 
             await _saleRepository.Received(1).CreateAsync(
                 Arg.Is<Sale>(s => s.SaleNumber == command.SaleNumber),
@@ -78,7 +98,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
         [Fact(DisplayName = "Given an existing SaleNumber, when Handle is invoked, then it throws InvalidOperationException")]
         public async Task Handle_SaleNumberAlreadyExists_ThrowsInvalidOperationException()
         {
-            //Arrange
+            // Arrange
             var command = CreateSaleHandlerTestData.GenerateValidCommand();
 
             var existingSale = new Sale(
@@ -94,10 +114,10 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             _saleRepository.GetBySaleNumberAsync(command.SaleNumber, Arg.Any<CancellationToken>())
                            .Returns(existingSale);
 
-            //Act
+            // Act
             Func<Task> act = () => _handler.Handle(command, CancellationToken.None);
 
-            //Assert
+            // Assert
             await act.Should().ThrowAsync<InvalidOperationException>()
                 .WithMessage($"Sale with number {command.SaleNumber} already exists");
         }
@@ -105,7 +125,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
         [Fact(DisplayName = "Given a valid command, when Handle is invoked, then it maps command to Sale entity")]
         public async Task Handle_ValidRequest_MapsCommandToSale()
         {
-            //Arrange
+            // Arrange
             var command = CreateSaleHandlerTestData.GenerateValidCommand();
 
             var sale = new Sale(

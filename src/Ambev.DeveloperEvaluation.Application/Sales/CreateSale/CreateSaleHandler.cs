@@ -1,8 +1,10 @@
-﻿using AutoMapper;
-using MediatR;
-using FluentValidation;
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
-using Ambev.DeveloperEvaluation.Domain.Entities;
+using AutoMapper;
+using FluentValidation;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 {
@@ -30,7 +32,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
         /// </summary>
         /// <param name="command">The CreateSale command.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The created sale details.</returns>
+        /// <returns>The created sale details as a full SaleDto.</returns>
         public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
         {
             var validator = new CreateSaleCommandValidator();
@@ -41,17 +43,14 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
             var existingSale = await _saleRepository.GetBySaleNumberAsync(command.SaleNumber, cancellationToken);
             if (existingSale != null)
             {
-                throw new InvalidOperationException(
-                    $"Sale with number {command.SaleNumber} already exists"
-                );
+                throw new InvalidOperationException($"Sale with number {command.SaleNumber} already exists");
             }
 
             var sale = _mapper.Map<Sale>(command);
-
             var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
 
+            // Map the created sale entity to a full SaleDto wrapped in the result.
             var result = _mapper.Map<CreateSaleResult>(createdSale);
-
             return result;
         }
     }
