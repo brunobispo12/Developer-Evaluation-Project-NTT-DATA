@@ -2,6 +2,8 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
 {
@@ -29,7 +31,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
         /// </summary>
         /// <param name="command">The UpdateSale command.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The updated sale details.</returns>
+        /// <returns>The updated sale details as a SaleDto.</returns>
         /// <exception cref="ValidationException">Thrown when the command fails validation.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the sale does not exist or if the sale number conflicts.</exception>
         public async Task<UpdateSaleResult> Handle(UpdateSaleCommand command, CancellationToken cancellationToken)
@@ -42,23 +44,21 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
             var existingSale = await _saleRepository.GetByIdAsync(command.Id, cancellationToken);
             if (existingSale == null)
             {
-                throw new InvalidOperationException(
-                    $"Sale with Id {command.Id} does not exist."
-                );
+                throw new InvalidOperationException($"Sale with Id {command.Id} does not exist.");
             }
 
             var saleWithSameNumber = await _saleRepository.GetBySaleNumberAsync(command.SaleNumber, cancellationToken);
             if (saleWithSameNumber != null && saleWithSameNumber.Id != existingSale.Id)
             {
-                throw new InvalidOperationException(
-                    $"Sale with number {command.SaleNumber} already exists."
-                );
+                throw new InvalidOperationException($"Sale with number {command.SaleNumber} already exists.");
             }
 
+            // Map the updated data onto the existing sale
             _mapper.Map(command, existingSale);
 
             var updatedSale = await _saleRepository.UpdateAsync(existingSale, cancellationToken);
 
+            // Map the updated sale to the result that wraps a SaleDto
             var result = _mapper.Map<UpdateSaleResult>(updatedSale);
 
             return result;

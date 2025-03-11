@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentAssertions;
 using FluentValidation;
 using NSubstitute;
@@ -9,6 +6,7 @@ using Xunit;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
+using Ambev.DeveloperEvaluation.Common.DTO;
 using Ambev.DeveloperEvaluation.Unit.Application.TestData;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application
@@ -45,31 +43,55 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 Id = command.Id
             };
 
+            var updatedSale = new Sale(
+                command.SaleNumber,
+                command.SaleDate,
+                command.Customer,
+                command.Branch
+            )
+            {
+                Id = command.Id
+            };
+
+            var saleDto = new SaleDto
+            {
+                Id = updatedSale.Id,
+                SaleNumber = updatedSale.SaleNumber,
+                SaleDate = updatedSale.SaleDate,
+                Customer = updatedSale.Customer,
+                Branch = updatedSale.Branch,
+                IsCancelled = updatedSale.IsCancelled,
+                TotalAmount = updatedSale.TotalAmount,
+                Items = new System.Collections.Generic.List<SaleItemDto>()
+            };
+
             var updateSaleResult = new UpdateSaleResult
             {
-                Id = existingSale.Id
+                Sale = saleDto
             };
 
             // Set up repository and mapper mock behavior
             _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
                            .Returns(existingSale);
-            _mapper.Map(command, existingSale).Returns(existingSale);
+            _mapper.Map(command, existingSale).Returns(updatedSale);
             _saleRepository.UpdateAsync(existingSale, Arg.Any<CancellationToken>())
-                           .Returns(existingSale);
-            _mapper.Map<UpdateSaleResult>(existingSale).Returns(updateSaleResult);
+                           .Returns(updatedSale);
+            _mapper.Map<UpdateSaleResult>(updatedSale).Returns(updateSaleResult);
 
             // Act
             var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
-            result.Id.Should().Be(existingSale.Id);
+            result.Sale.Should().NotBeNull();
+            result.Sale.Id.Should().Be(existingSale.Id);
+            result.Sale.SaleNumber.Should().Be(updatedSale.SaleNumber);
 
             await _saleRepository.Received(1).GetByIdAsync(command.Id, Arg.Any<CancellationToken>());
             await _saleRepository.Received(1).UpdateAsync(existingSale, Arg.Any<CancellationToken>());
             _mapper.Received(1).Map(command, existingSale);
+            _mapper.Received(1).Map<UpdateSaleResult>(updatedSale);
         }
-
 
         [Fact(DisplayName = "Given an invalid UpdateSaleCommand, when Handle is invoked, then it throws ValidationException")]
         public async Task Handle_InvalidRequest_ThrowsValidationException()
@@ -127,7 +149,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 Id = Guid.NewGuid()
             };
 
-            // Mock behavior
             _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
                            .Returns(existingSale);
             _saleRepository.GetBySaleNumberAsync(command.SaleNumber, Arg.Any<CancellationToken>())
@@ -167,7 +188,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 Id = command.Id
             };
 
-            // Mock behavior
             _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
                            .Returns(existingSale);
             _mapper.Map(command, existingSale).Returns(updatedSale);
