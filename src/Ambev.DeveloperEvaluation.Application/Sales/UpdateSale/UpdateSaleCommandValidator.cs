@@ -1,6 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using FluentValidation;
-using System;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
 {

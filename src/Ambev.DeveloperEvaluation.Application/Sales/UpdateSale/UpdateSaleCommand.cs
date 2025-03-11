@@ -1,8 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
 {

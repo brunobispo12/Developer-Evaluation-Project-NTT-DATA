@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
+﻿namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
 {
     /// <summary>
     /// Represents the response returned after successfully updating an existing sale.

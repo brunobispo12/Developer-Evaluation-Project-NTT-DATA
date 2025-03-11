@@ -1,7 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Common.Validation;
-using FluentValidation;
-using System;
-using System.Linq;
+﻿using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 {

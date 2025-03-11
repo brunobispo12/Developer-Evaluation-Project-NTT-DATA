@@ -1,6 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.GetAllSales;
 using FluentValidation;
-using Microsoft.IdentityModel.Tokens;
 
 /// <summary>
 /// Validator for GetAllSalesCommand, ensuring that pagination and sorting are valid.

@@ -1,7 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
-using FluentValidation;
 using MediatR;
-using System.Linq;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale
 {

@@ -1,5 +1,4 @@
 ﻿using Ambev.DeveloperEvaluation.Common.DTO;
-using System;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSaleById
 {
