@@ -34,8 +34,9 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             // Arrange
             var command = UpdateSaleHandlerTestData.GenerateValidCommand();
 
+            // A venda original já possui um SaleNumber imutável ("OriginalNumber").
             var existingSale = new Sale(
-                "OriginalNumber",
+                "OriginalNumber",               // SaleNumber mantido
                 DateTime.Now.AddDays(-2),
                 "OriginalCustomer",
                 "OriginalBranch"
@@ -44,8 +45,10 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 Id = command.Id
             };
 
+            // Após a atualização, o SaleNumber não muda,
+            // mas data, cliente e branch podem ser alterados conforme o comando.
             var updatedSale = new Sale(
-                command.SaleNumber,
+                "OriginalNumber",               // Mantém o mesmo SaleNumber
                 command.SaleDate,
                 command.Customer,
                 command.Branch
@@ -57,7 +60,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             var saleDto = new SaleDto
             {
                 Id = updatedSale.Id,
-                SaleNumber = updatedSale.SaleNumber,
+                SaleNumber = updatedSale.SaleNumber, // Continua "OriginalNumber"
                 SaleDate = updatedSale.SaleDate,
                 Customer = updatedSale.Customer,
                 Branch = updatedSale.Branch,
@@ -71,12 +74,16 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 Sale = saleDto
             };
 
-            // Set up repository and mapper mock behavior
+            // Simulação do comportamento do repositório e do mapper
             _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
                            .Returns(existingSale);
+
+            // Mapeamos o comando para a entidade existente
             _mapper.Map(command, existingSale).Returns(updatedSale);
+
             _saleRepository.UpdateAsync(existingSale, Arg.Any<CancellationToken>())
                            .Returns(updatedSale);
+
             _mapper.Map<UpdateSaleResult>(updatedSale).Returns(updateSaleResult);
 
             // Act
@@ -86,7 +93,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             result.Should().NotBeNull();
             result.Sale.Should().NotBeNull();
             result.Sale.Id.Should().Be(existingSale.Id);
-            result.Sale.SaleNumber.Should().Be(updatedSale.SaleNumber);
+            // Verifica se o SaleNumber não mudou
+            result.Sale.SaleNumber.Should().Be("OriginalNumber");
 
             await _saleRepository.Received(1).GetByIdAsync(command.Id, Arg.Any<CancellationToken>());
             await _saleRepository.Received(1).UpdateAsync(existingSale, Arg.Any<CancellationToken>());
@@ -124,44 +132,16 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 .WithMessage($"Sale with Id {command.Id} does not exist.");
         }
 
+        // REMOVIDO ou COMENTADO: teste que dependia do SaleNumber no comando
+        /*
         [Fact(DisplayName = "Given an existing sale number on a different sale, when Handle is invoked, then it throws InvalidOperationException")]
         public async Task Handle_SaleNumberConflict_ThrowsInvalidOperationException()
         {
-            // Arrange
-            var command = UpdateSaleHandlerTestData.GenerateValidCommand();
-
-            var existingSale = new Sale(
-                "OriginalNumber",
-                DateTime.Now.AddDays(-2),
-                "OriginalCustomer",
-                "OriginalBranch"
-            )
-            {
-                Id = command.Id
-            };
-
-            var conflictingSale = new Sale(
-                command.SaleNumber,
-                command.SaleDate,
-                command.Customer,
-                command.Branch
-            )
-            {
-                Id = Guid.NewGuid()
-            };
-
-            _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
-                           .Returns(existingSale);
-            _saleRepository.GetBySaleNumberAsync(command.SaleNumber, Arg.Any<CancellationToken>())
-                           .Returns(conflictingSale);
-
-            // Act
-            Func<Task> act = () => _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            await act.Should().ThrowAsync<InvalidOperationException>()
-                .WithMessage($"Sale with number {command.SaleNumber} already exists.");
+            // Este teste não faz mais sentido se o comando não contém SaleNumber.
+            // Caso ainda exista alguma regra de conflito de SaleNumber, ela deve ser ajustada
+            // para refletir que o SaleNumber não é atualizado pelo comando.
         }
+        */
 
         [Fact(DisplayName = "Given a valid command, when Handle is invoked, then it maps command to the existing Sale entity")]
         public async Task Handle_ValidRequest_MapsCommandToSale()
@@ -180,7 +160,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             };
 
             var updatedSale = new Sale(
-                command.SaleNumber,
+                "OriginalNumber", // Mantém o mesmo SaleNumber
                 command.SaleDate,
                 command.Customer,
                 command.Branch
@@ -191,6 +171,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
 
             _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
                            .Returns(existingSale);
+
             _mapper.Map(command, existingSale).Returns(updatedSale);
             _saleRepository.UpdateAsync(updatedSale, Arg.Any<CancellationToken>())
                            .Returns(updatedSale);
