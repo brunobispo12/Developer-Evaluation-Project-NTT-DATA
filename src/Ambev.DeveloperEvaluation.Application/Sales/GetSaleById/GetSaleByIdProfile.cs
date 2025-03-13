@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Common.DTO;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSaleById
 {
@@ -13,7 +14,10 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSaleById
         /// </summary>
         public GetSaleByIdProfile()
         {
-            CreateMap<Sale, GetSaleByIdResult>();
+            CreateMap<Sale, SaleDto>();
+
+            CreateMap<Sale, GetSaleByIdResult>()
+                .ForMember(dest => dest.Sale, opt => opt.MapFrom(src => src));
         }
     }
 }
