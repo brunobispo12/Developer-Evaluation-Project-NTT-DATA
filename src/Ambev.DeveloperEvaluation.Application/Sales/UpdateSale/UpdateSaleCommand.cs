@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Common.Validation;
+﻿using Ambev.DeveloperEvaluation.Common.DTO;
+using Ambev.DeveloperEvaluation.Common.Validation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
@@ -47,6 +48,11 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
         /// Gets or sets the branch where the sale was made.
         /// </summary>
         public string Branch { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the sale is canceled.
+        /// </summary>
+        public bool IsCancelled { get; set; }
 
         /// <summary>
         /// Gets or sets the list of sale items.
