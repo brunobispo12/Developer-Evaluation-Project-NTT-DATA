@@ -7,6 +7,7 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.Common.DTO;
+using Ambev.DeveloperEvaluation.Application.Sales;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application
 {
