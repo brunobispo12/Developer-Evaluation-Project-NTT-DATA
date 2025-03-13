@@ -1,6 +1,7 @@
-﻿using Ambev.DeveloperEvaluation.Common.DTO;
+﻿using AutoMapper;
+using Ambev.DeveloperEvaluation.Common.DTO;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using AutoMapper;
+using System.Linq;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
 {
@@ -14,24 +15,15 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
         /// </summary>
         public UpdateSaleProfile()
         {
-            CreateMap<UpdateSaleCommand, Sale>();
-            CreateMap<Sale, UpdateSaleResult>();
-
-
             CreateMap<UpdateSaleCommand, Sale>()
                 .ForMember(dest => dest.Items, opt => opt.Ignore())
                 .AfterMap((src, dest) =>
                 {
-                    var saleItems = src.Items.Select(dto =>
-                        new SaleItem(
-                            dest,
-                            dto.Product,
-                            dto.Quantity,
-                            dto.UnitPrice,
-                            dto.Discount
-                        )
-                    ).ToList();
-                    dest.AddItems(saleItems);
+                    foreach (var dto in src.Items)
+                    {
+                        dest.AddItem(dto.Product, dto.Quantity, dto.UnitPrice);
+                    }
+
                     if (src.IsCancelled)
                     {
                         dest.CancelSale();

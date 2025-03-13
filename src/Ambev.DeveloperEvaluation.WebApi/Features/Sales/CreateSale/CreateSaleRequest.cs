@@ -59,10 +59,5 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale
         /// </summary>
         public decimal UnitPrice { get; set; }
 
-        /// <summary>
-        /// Gets or sets the applied discount (e.g., 0.10 for 10%).
-        /// </summary>
-        public decimal Discount { get; set; }
-
     }
 }

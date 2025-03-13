@@ -5,12 +5,12 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 {
     /// <summary>
-    /// Profile for mapping between Sale entity and CreateSaleResponse
+    /// Profile for mapping between Sale entity and CreateSaleResponse.
     /// </summary>
     public class CreateSaleProfile : Profile
     {
         /// <summary>
-        /// Initializes the mappings for CreateSale operation
+        /// Initializes the mappings for CreateSale operation.
         /// </summary>
         public CreateSaleProfile()
         {
@@ -18,16 +18,11 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
                 .ForMember(dest => dest.Items, opt => opt.Ignore())
                 .AfterMap((src, dest) =>
                 {
-                    var saleItems = src.Items.Select(dto =>
-                        new SaleItem(
-                            dest,         
-                            dto.Product,
-                            dto.Quantity,
-                            dto.UnitPrice,
-                            dto.Discount
-                        )
-                    ).ToList();
-                    dest.AddItems(saleItems);
+                    foreach (var dto in src.Items)
+                    {
+                        dest.AddItem(dto.Product, dto.Quantity, dto.UnitPrice);
+                    }
+
                     if (src.IsCancelled)
                     {
                         dest.CancelSale();
