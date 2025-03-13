@@ -1,10 +1,9 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Services;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 {
@@ -15,16 +14,19 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
     {
         private readonly ISaleRepository _saleRepository;
         private readonly IMapper _mapper;
+        private readonly ISaleNumberGenerator _saleNumberGenerator;
 
         /// <summary>
         /// Initializes a new instance of CreateSaleHandler.
         /// </summary>
         /// <param name="saleRepository">The sale repository.</param>
         /// <param name="mapper">The AutoMapper instance.</param>
-        public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper)
+        /// <param name="saleNumberGenerator">The service used to generate the sale number.</param>
+        public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper, ISaleNumberGenerator saleNumberGenerator)
         {
             _saleRepository = saleRepository;
             _mapper = mapper;
+            _saleNumberGenerator = saleNumberGenerator;
         }
 
         /// <summary>
@@ -40,16 +42,11 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
 
-            var existingSale = await _saleRepository.GetBySaleNumberAsync(command.SaleNumber, cancellationToken);
-            if (existingSale != null)
-            {
-                throw new InvalidOperationException($"Sale with number {command.SaleNumber} already exists");
-            }
+            command.SaleNumber = await _saleNumberGenerator.GenerateSaleNumberAsync(command.SaleDate, cancellationToken);
 
             var sale = _mapper.Map<Sale>(command);
             var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
 
-            // Map the created sale entity to a full SaleDto wrapped in the result.
             var result = _mapper.Map<CreateSaleResult>(createdSale);
             return result;
         }
