@@ -23,10 +23,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
             RuleFor(sale => sale.Id)
                 .NotEmpty().WithMessage("Sale Id is required for update.");
 
-            RuleFor(sale => sale.SaleNumber)
-                .NotEmpty().WithMessage("Sale number is required.")
-                .Length(3, 50).WithMessage("Sale number must be between 3 and 50 characters.");
-
             RuleFor(sale => sale.SaleDate)
                 .LessThanOrEqualTo(DateTime.Now).WithMessage("Sale date cannot be in the future.");
 

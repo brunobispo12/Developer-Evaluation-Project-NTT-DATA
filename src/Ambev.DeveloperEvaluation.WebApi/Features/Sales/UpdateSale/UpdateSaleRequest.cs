@@ -14,11 +14,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the sale number.
-        /// </summary>
-        public string SaleNumber { get; set; } = string.Empty;
-
-        /// <summary>
         /// Gets or sets the sale date.
         /// </summary>
         public DateTime SaleDate { get; set; }
