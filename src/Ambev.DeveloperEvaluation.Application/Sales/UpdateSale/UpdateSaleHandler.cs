@@ -47,12 +47,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
                 throw new InvalidOperationException($"Sale with Id {command.Id} does not exist.");
             }
 
-            var saleWithSameNumber = await _saleRepository.GetBySaleNumberAsync(command.SaleNumber, cancellationToken);
-            if (saleWithSameNumber != null && saleWithSameNumber.Id != existingSale.Id)
-            {
-                throw new InvalidOperationException($"Sale with number {command.SaleNumber} already exists.");
-            }
-
             // Map the updated data onto the existing sale
             _mapper.Map(command, existingSale);
 
