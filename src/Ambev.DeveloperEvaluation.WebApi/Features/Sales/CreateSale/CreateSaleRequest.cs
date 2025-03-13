@@ -9,11 +9,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale
     public class CreateSaleRequest
     {
         /// <summary>
-        /// Gets or sets the sale number.
-        /// </summary>
-        public string SaleNumber { get; set; } = string.Empty;
-
-        /// <summary>
         /// Gets or sets the sale date.
         /// </summary>
         public DateTime SaleDate { get; set; }
