@@ -108,7 +108,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         /// </param>
         public async Task<PaginatedList<Sale>> GetAllAsync(int pageNumber, int pageSize, string? order, CancellationToken cancellationToken = default)
         {
-            IQueryable<Sale> query = _context.Sales.AsQueryable();
+            IQueryable<Sale> query = _context.Sales.Include(s => s.Items).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(order))
             {
