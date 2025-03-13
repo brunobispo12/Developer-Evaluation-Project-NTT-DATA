@@ -127,12 +127,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
             var command = _mapper.Map<UpdateSaleCommand>(request);
             var result = await _mediator.Send(command, cancellationToken);
 
-            return Ok(new ApiResponseWithData<UpdateSaleResponse>
-            {
-                Success = true,
-                Message = "Sale updated successfully",
-                Data = _mapper.Map<UpdateSaleResponse>(result)
-            });
+            return Ok(_mapper.Map<UpdateSaleResponse>(result));
         }
 
         /// <summary>
