@@ -1,7 +1,6 @@
-﻿using Ambev.DeveloperEvaluation.Common.Validation;
-using Ambev.DeveloperEvaluation.Domain.Common;
+﻿using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Validation;
-using System;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
@@ -47,7 +46,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
 
         /// <summary>
         /// Private constructor for EF Core materialization.
-        /// Initializes default values for properties that cannot be null.
         /// </summary>
         private SaleItem()
         {
@@ -75,35 +73,35 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         }
 
         /// <summary>
-        /// Performs validation of the <see cref="SaleItem"/> entity using the <see cref="SaleItemValidator"/> rules.
+        /// Validates the sale item using the <see cref="SaleItemValidator"/> rules.
         /// </summary>
         /// <returns>
         /// A <see cref="ValidationResultDetail"/> containing:
-        /// - <c>IsValid</c>: Indicates whether all validation rules passed.
-        /// - <c>Errors</c>: A collection of validation errors if any rules failed.
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description><c>IsValid</c>: Indicates whether all validation rules passed.</description>
+        ///   </item>
+        ///   <item>
+        ///     <description><c>Errors</c>: A collection of validation errors if any rules failed.</description>
+        ///   </item>
+        /// </list>
         /// </returns>
         /// <remarks>
         /// The validation checks include:
         /// <list type="bullet">
-        ///     <item>
-        ///         <description>Product identifier is not empty.</description>
-        ///     </item>
-        ///     <item>
-        ///         <description>Quantity is greater than 0 and no more than 20.</description>
-        ///     </item>
-        ///     <item>
-        ///         <description>Unit price is greater than 0.</description>
-        ///     </item>
-        ///     <item>
-        ///         <description>
-        ///             Discount rules:
-        ///             <list type="bullet">
-        ///                 <item><description>No discount for quantities below 4.</description></item>
-        ///                 <item><description>10% discount for quantities between 4 and 9.</description></item>
-        ///                 <item><description>20% discount for quantities between 10 and 20.</description></item>
-        ///             </list>
-        ///         </description>
-        ///     </item>
+        ///   <item><description>Product identifier must not be empty.</description></item>
+        ///   <item><description>Quantity must be greater than 0 and no more than 20.</description></item>
+        ///   <item><description>Unit price must be greater than 0.</description></item>
+        ///   <item>
+        ///     <description>
+        ///       Discount rules:
+        ///       <list type="bullet">
+        ///         <item><description>No discount for quantities below 4.</description></item>
+        ///         <item><description>10% discount for quantities between 4 and 9.</description></item>
+        ///         <item><description>20% discount for quantities between 10 and 20.</description></item>
+        ///       </list>
+        ///     </description>
+        ///   </item>
         /// </list>
         /// </remarks>
         public ValidationResultDetail Validate()

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Common.Validation;
-using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Validation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
@@ -53,6 +50,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public decimal TotalAmount => _items.Sum(item => item.TotalPrice);
 
         /// <summary>
+        /// Parameterless constructor for EF Core (if needed).
+        /// </summary>
+        private Sale()
+        {
+            _items = [];
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Sale"/> class.
         /// </summary>
         /// <param name="saleNumber">Sale number.</param>
@@ -60,6 +65,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <param name="customer">Customer identification.</param>
         /// <param name="branch">Branch where the sale was made.</param>
         public Sale(string saleNumber, DateTime saleDate, string customer, string branch)
+            : this()
         {
             SaleNumber = saleNumber;
             SaleDate = saleDate;
@@ -69,28 +75,17 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         }
 
         /// <summary>
-        /// Performs validation of the sale entity using the <see cref="SaleValidator"/> rules.
+        /// Adds multiple items to the sale in one go.
         /// </summary>
-        /// <returns>
-        /// A <see cref="ValidationResultDetail"/> containing:
-        /// - <c>IsValid</c>: Indicates whether all validation rules passed.
-        /// - <c>Errors</c>: Collection of validation errors if any rules failed.
-        /// </returns>
-        public ValidationResultDetail Validate()
+        /// <param name="items">The items to add.</param>
+        public void AddItems(IEnumerable<SaleItem> items)
         {
-            var validator = new SaleValidator();
-            var result = validator.Validate(this);
-            return new ValidationResultDetail
-            {
-                IsValid = result.IsValid,
-                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
-            };
+            _items.AddRange(items);
         }
 
         /// <summary>
         /// Adds an item to the sale, applying business discount rules.
         /// </summary>
-        /// <param name="sale">This Sale</param>
         /// <param name="product">Product identification.</param>
         /// <param name="quantity">Quantity of the product.</param>
         /// <param name="unitPrice">Unit price of the product.</param>
@@ -111,6 +106,25 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public void CancelSale()
         {
             IsCancelled = true;
+        }
+
+        /// <summary>
+        /// Performs validation of the sale entity using the <see cref="SaleValidator"/> rules.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ValidationResultDetail"/> containing:
+        /// - <c>IsValid</c>: Indicates whether all validation rules passed.
+        /// - <c>Errors</c>: Collection of validation errors if any rules failed.
+        /// </returns>
+        public ValidationResultDetail Validate()
+        {
+            var validator = new SaleValidator();
+            var result = validator.Validate(this);
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+            };
         }
     }
 }
