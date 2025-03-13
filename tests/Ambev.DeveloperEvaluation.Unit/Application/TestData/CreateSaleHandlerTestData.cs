@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
-using Ambev.DeveloperEvaluation.Application.Sales;
+using Ambev.DeveloperEvaluation.Common.DTO;
+
 
 namespace Ambev.DeveloperEvaluation.Unit.Application.TestData
 {
