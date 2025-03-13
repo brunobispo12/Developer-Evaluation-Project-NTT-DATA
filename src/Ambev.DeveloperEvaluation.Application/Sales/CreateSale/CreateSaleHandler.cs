@@ -17,7 +17,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
         private readonly ISaleNumberGenerator _saleNumberGenerator;
 
         /// <summary>
-        /// Initializes a new instance of CreateSaleHandler.
+        /// Initializes a new instance of the <see cref="CreateSaleHandler"/> class.
         /// </summary>
         /// <param name="saleRepository">The sale repository.</param>
         /// <param name="mapper">The AutoMapper instance.</param>
@@ -35,6 +35,8 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
         /// <param name="command">The CreateSale command.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The created sale details as a full SaleDto.</returns>
+        /// <exception cref="ValidationException">Thrown when validation fails.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when a sale with the generated SaleNumber already exists.</exception>
         public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
         {
             var validator = new CreateSaleCommandValidator();
@@ -44,7 +46,14 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 
             command.SaleNumber = await _saleNumberGenerator.GenerateSaleNumberAsync(command.SaleDate, cancellationToken);
 
+            var existingSale = await _saleRepository.GetBySaleNumberAsync(command.SaleNumber, cancellationToken);
+            if (existingSale != null)
+            {
+                throw new InvalidOperationException($"Sale with number {command.SaleNumber} already exists");
+            }
+
             var sale = _mapper.Map<Sale>(command);
+
             var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
 
             var result = _mapper.Map<CreateSaleResult>(createdSale);
