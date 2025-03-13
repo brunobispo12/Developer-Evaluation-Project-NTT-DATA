@@ -121,5 +121,21 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
 
             return await PaginatedList<Sale>.CreateAsync(query, pageNumber, pageSize);
         }
+
+        /// <summary>
+        /// Retrieves the last sale created for a specific date, 
+        /// based on the sale number pattern (e.g., "DS-YYYYMMDD-XXXXXX").
+        /// </summary>
+        /// <param name="saleDate">The date of the sale to filter by.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The last matching <see cref="Sale"/> found for the given date, or <c>null</c> if none is found.</returns>
+        public async Task<Sale?> GetLastSaleForDateAsync(DateTime saleDate, CancellationToken cancellationToken = default)
+        {
+            string datePart = saleDate.ToString("yyyyMMdd");
+            return await _context.Sales
+                .Where(s => s.SaleNumber.StartsWith($"DS-{datePart}-"))
+                .OrderByDescending(s => s.SaleNumber)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

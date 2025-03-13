@@ -61,5 +61,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True if the sale was deleted, false if not found.</returns>
         Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Retrieves the last sale created for a specific date,
+        /// based on the sale number pattern (e.g., "DS-YYYYMMDD-XXXXXX").
+        /// </summary>
+        /// <param name="saleDate">The date of the sale to filter by.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The last matching sale, or <c>null</c> if none is found.</returns>
+        Task<Sale?> GetLastSaleForDateAsync(DateTime saleDate, CancellationToken cancellationToken = default);
     }
 }
