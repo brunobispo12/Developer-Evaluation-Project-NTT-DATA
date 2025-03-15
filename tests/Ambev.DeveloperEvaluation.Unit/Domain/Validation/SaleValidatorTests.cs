@@ -1,5 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Domain.Validation;
+﻿using Ambev.DeveloperEvaluation.Domain.Validation;
 using Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData;
 using FluentValidation.TestHelper;
 using Xunit;
@@ -80,7 +79,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Validation
         {
             // Arrange
             var sale = SaleTestData.GenerateValidSale();
-            sale.GetType().GetProperty("Customer")!.SetValue(sale, string.Empty);
+            // Alterado para atribuir Guid.Empty, pois Customer agora é do tipo Guid
+            sale.GetType().GetProperty("Customer")!.SetValue(sale, Guid.Empty);
 
             // Act
             var result = _validator.TestValidate(sale);

@@ -7,7 +7,6 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.Common.DTO;
-using Ambev.DeveloperEvaluation.Application.Sales;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application
 {
@@ -33,7 +32,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             // Arrange
             var command = new GetSaleByIdCommand { Id = Guid.NewGuid() };
 
-            var sale = new Sale("Sale001", DateTime.Now.AddDays(-1), "Customer A", "Branch A")
+            var sale = new Sale("Sale001", DateTime.Now.AddDays(-1), Guid.NewGuid(), Guid.NewGuid())
             {
                 Id = command.Id
             };

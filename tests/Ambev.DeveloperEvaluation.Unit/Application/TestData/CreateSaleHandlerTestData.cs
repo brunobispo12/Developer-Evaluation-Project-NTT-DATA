@@ -19,8 +19,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Application.TestData
         private static readonly Faker<CreateSaleCommand> commandFaker = new Faker<CreateSaleCommand>()
             .RuleFor(x => x.SaleNumber, f => f.Random.AlphaNumeric(8))
             .RuleFor(x => x.SaleDate, f => f.Date.Past(1))
-            .RuleFor(x => x.Customer, f => f.Person.FullName)
-            .RuleFor(x => x.Branch, f => f.Company.CompanyName())
+            .RuleFor(sale => sale.Customer, f => Guid.NewGuid())
+            .RuleFor(sale => sale.Branch, f => Guid.NewGuid())
             .RuleFor(x => x.Items, f => itemFaker.Generate(f.Random.Int(min: 1, max: 5)));
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Application.TestData
             {
                 SaleNumber = string.Empty,
                 SaleDate = DateTime.Now.AddDays(7),
-                Customer = string.Empty,
-                Branch = string.Empty,
+                Customer = Guid.Empty,
+                Branch = Guid.Empty,
                 Items = new List<SaleItemDto>()
             };
         }

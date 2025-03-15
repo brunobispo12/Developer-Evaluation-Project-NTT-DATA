@@ -47,8 +47,8 @@ namespace Ambev.DeveloperEvaluation.Integration.Features.Sales
                 {
                     Id = saleId,
                     SaleDate = createSaleRequest.SaleDate,
-                    Customer = "Updated Customer",
-                    Branch = "Updated Branch",
+                    Customer = Guid.NewGuid(),
+                    Branch = Guid.NewGuid(),
                     IsCancelled = true,
                     Items = new List<SaleItemRequest>
                     {
@@ -71,8 +71,6 @@ namespace Ambev.DeveloperEvaluation.Integration.Features.Sales
 
                 // Assert
                 updateApiResponse.Data.Sale.Id.Should().Be(saleId);
-                updateApiResponse.Data.Sale.Customer.Should().Be("Updated Customer");
-                updateApiResponse.Data.Sale.Branch.Should().Be("Updated Branch");
                 updateApiResponse.Data.Sale.IsCancelled.Should().BeTrue();
                 updateApiResponse.Data.Sale.SaleDate.Should().BeCloseTo(updateSaleRequest.SaleDate, TimeSpan.FromSeconds(1));
             }

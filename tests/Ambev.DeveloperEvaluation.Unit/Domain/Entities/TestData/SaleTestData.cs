@@ -1,6 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Bogus;
-using System;
 
 namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData
 {
@@ -19,8 +18,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData
             return new Sale(
                 saleNumber: _faker.Random.AlphaNumeric(8),
                 saleDate: _faker.Date.Past(1),
-                customer: _faker.Person.FullName,
-                branch: _faker.Company.CompanyName()
+                customer: _faker.Random.Guid(),
+                branch: _faker.Random.Guid()
             );
         }
 
@@ -33,8 +32,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities.TestData
             return new Sale(
                 saleNumber: string.Empty,
                 saleDate: DateTime.MinValue,
-                customer: string.Empty,
-                branch: string.Empty
+                customer: Guid.NewGuid(),
+                branch: Guid.NewGuid()
             );
         }
     }

@@ -14,8 +14,8 @@ namespace Ambev.DeveloperEvaluation.Integration.Features.Sales.TestData
 
             var saleFaker = new Faker<CreateSaleRequest>()
                 .RuleFor(sale => sale.SaleDate, f => DateTime.UtcNow.AddDays(-1))
-                .RuleFor(sale => sale.Customer, f => f.Person.FullName)
-                .RuleFor(sale => sale.Branch, f => f.Company.CompanyName())
+                .RuleFor(sale => sale.Customer, f => Guid.NewGuid())
+                .RuleFor(sale => sale.Branch, f => Guid.NewGuid())
                 .RuleFor(sale => sale.IsCancelled, f => false)
                 .RuleFor(sale => sale.Items, f => saleItemFaker.Generate(f.Random.Int(1, 3)));
 

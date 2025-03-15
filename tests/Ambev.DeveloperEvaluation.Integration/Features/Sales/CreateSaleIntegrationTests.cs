@@ -61,8 +61,8 @@ namespace Ambev.DeveloperEvaluation.IntegrationTests.Features.Sales
             var invalidSaleRequest = new CreateSaleRequest
             {
                 SaleDate = DateTime.UtcNow.AddDays(-1),
-                Customer = "",
-                Branch = "",
+                Customer = Guid.NewGuid(),
+                Branch = Guid.NewGuid(),
                 IsCancelled = false,
                 Items = new List<SaleItemRequest>
                 {

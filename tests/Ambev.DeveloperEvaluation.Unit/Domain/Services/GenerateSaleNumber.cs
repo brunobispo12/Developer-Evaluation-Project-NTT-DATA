@@ -35,7 +35,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain.Services
             var saleDate = new DateTime(2025, 3, 12);
             var saleRepository = Substitute.For<ISaleRepository>();
 
-            var existingSale = new Sale("DS-20250312-000005", saleDate, "TestCustomer", "TestBranch")
+            var existingSale = new Sale("DS-20250312-000005", saleDate, Guid.NewGuid(), Guid.NewGuid())
             {
                 Id = Guid.NewGuid()
             };

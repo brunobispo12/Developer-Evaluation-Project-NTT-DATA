@@ -8,7 +8,6 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.Common.DTO;
 using Ambev.DeveloperEvaluation.Unit.Application.TestData;
-using Ambev.DeveloperEvaluation.Application.Sales;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application
 {
@@ -34,21 +33,18 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             // Arrange
             var command = UpdateSaleHandlerTestData.GenerateValidCommand();
 
-            // A venda original já possui um SaleNumber imutável ("OriginalNumber").
             var existingSale = new Sale(
-                "OriginalNumber",               // SaleNumber mantido
+                "OriginalNumber",
                 DateTime.Now.AddDays(-2),
-                "OriginalCustomer",
-                "OriginalBranch"
+                Guid.NewGuid(),
+                Guid.NewGuid()
             )
             {
                 Id = command.Id
             };
 
-            // Após a atualização, o SaleNumber não muda,
-            // mas data, cliente e branch podem ser alterados conforme o comando.
             var updatedSale = new Sale(
-                "OriginalNumber",               // Mantém o mesmo SaleNumber
+                "OriginalNumber",
                 command.SaleDate,
                 command.Customer,
                 command.Branch
@@ -60,7 +56,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             var saleDto = new SaleDto
             {
                 Id = updatedSale.Id,
-                SaleNumber = updatedSale.SaleNumber, // Continua "OriginalNumber"
+                SaleNumber = updatedSale.SaleNumber,
                 SaleDate = updatedSale.SaleDate,
                 Customer = updatedSale.Customer,
                 Branch = updatedSale.Branch,
@@ -74,11 +70,9 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 Sale = saleDto
             };
 
-            // Simulação do comportamento do repositório e do mapper
             _saleRepository.GetByIdAsync(command.Id, Arg.Any<CancellationToken>())
                            .Returns(existingSale);
 
-            // Mapeamos o comando para a entidade existente
             _mapper.Map(command, existingSale).Returns(updatedSale);
 
             _saleRepository.UpdateAsync(existingSale, Arg.Any<CancellationToken>())
@@ -132,17 +126,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
                 .WithMessage($"Sale with Id {command.Id} does not exist.");
         }
 
-        // REMOVIDO ou COMENTADO: teste que dependia do SaleNumber no comando
-        /*
-        [Fact(DisplayName = "Given an existing sale number on a different sale, when Handle is invoked, then it throws InvalidOperationException")]
-        public async Task Handle_SaleNumberConflict_ThrowsInvalidOperationException()
-        {
-            // Este teste não faz mais sentido se o comando não contém SaleNumber.
-            // Caso ainda exista alguma regra de conflito de SaleNumber, ela deve ser ajustada
-            // para refletir que o SaleNumber não é atualizado pelo comando.
-        }
-        */
-
         [Fact(DisplayName = "Given a valid command, when Handle is invoked, then it maps command to the existing Sale entity")]
         public async Task Handle_ValidRequest_MapsCommandToSale()
         {
@@ -152,8 +135,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             var existingSale = new Sale(
                 "OriginalNumber",
                 DateTime.Now.AddDays(-2),
-                "OriginalCustomer",
-                "OriginalBranch"
+                Guid.NewGuid(),
+                Guid.NewGuid()
             )
             {
                 Id = command.Id

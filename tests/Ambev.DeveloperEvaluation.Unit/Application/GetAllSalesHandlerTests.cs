@@ -33,8 +33,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
         {
             // Arrange
             var command = GetAllSalesHandlerTestData.GenerateValidCommand();
-            var saleOne = new Sale("Sale001", DateTime.Now.AddDays(-1), "Customer A", "Branch A") { Id = Guid.NewGuid() };
-            var saleTwo = new Sale("Sale002", DateTime.Now.AddDays(-2), "Customer B", "Branch B") { Id = Guid.NewGuid() };
+            var saleOne = new Sale("Sale001", DateTime.Now.AddDays(-1), Guid.NewGuid(), Guid.NewGuid()) { Id = Guid.NewGuid() };
+            var saleTwo = new Sale("Sale002", DateTime.Now.AddDays(-2), Guid.NewGuid(), Guid.NewGuid()) { Id = Guid.NewGuid() };
 
             var salesList = new List<Sale> { saleOne, saleTwo };
             var paginatedSales = new PaginatedList<Sale>(
