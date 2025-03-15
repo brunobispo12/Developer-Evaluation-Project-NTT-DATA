@@ -17,10 +17,14 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale
                 .LessThanOrEqualTo(DateTime.Now).WithMessage("Sale date cannot be in the future.");
 
             RuleFor(sale => sale.Customer)
-                .NotEmpty().WithMessage("Customer is required.");
+                .NotEmpty().WithMessage("Customer identifier must be provided.")
+                .Must(product => product != Guid.Empty)
+                .WithMessage("Customer identifier must be a valid GUID.");
 
             RuleFor(sale => sale.Branch)
-                .NotEmpty().WithMessage("Branch is required.");
+                .NotEmpty().WithMessage("Branch identifier must be provided.")
+                .Must(product => product != Guid.Empty)
+                .WithMessage("Branch identifier must be a valid GUID.");
 
             RuleFor(sale => sale.Items)
                 .NotEmpty().WithMessage("Sale must have at least one item.");

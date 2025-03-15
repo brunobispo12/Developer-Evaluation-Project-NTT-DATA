@@ -36,12 +36,12 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
         /// <summary>
         /// Gets or sets the customer identification.
         /// </summary>
-        public string Customer { get; set; } = string.Empty;
+        public Guid Customer { get; set; } = Guid.Empty;
 
         /// <summary>
         /// Gets or sets the branch where the sale was made.
         /// </summary>
-        public string Branch { get; set; } = string.Empty;
+        public Guid Branch { get; set; } = Guid.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether the sale is canceled.
