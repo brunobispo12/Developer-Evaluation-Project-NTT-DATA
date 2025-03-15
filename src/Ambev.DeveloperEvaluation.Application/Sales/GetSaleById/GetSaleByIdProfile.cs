@@ -9,12 +9,10 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSaleById
     /// </summary>
     public class GetSaleByIdProfile : Profile
     {
-        /// <summary>
-        /// Initializes the mappings for the GetSaleById operation.
-        /// </summary>
         public GetSaleByIdProfile()
         {
-            CreateMap<Sale, SaleDto>();
+            CreateMap<Sale, SaleDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<Sale, GetSaleByIdResult>()
                 .ForMember(dest => dest.Sale, opt => opt.MapFrom(src => src));
