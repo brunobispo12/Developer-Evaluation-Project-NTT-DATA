@@ -30,14 +30,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public DateTime SaleDate { get; private set; }
 
         /// <summary>
-        /// Gets the customer identification (can be an external identity from another domain).
+        /// Gets the customer identification (external identity from another domain).
         /// </summary>
-        public string Customer { get; private set; }
+        public Guid Customer { get; private set; }
 
         /// <summary>
-        /// Gets the branch where the sale was made.
+        /// Gets the branch where the sale was made (external identity from another domain).
         /// </summary>
-        public string Branch { get; private set; }
+        public Guid Branch { get; private set; }
 
         /// <summary>
         /// Indicates if the sale has been canceled.
@@ -64,7 +64,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <param name="saleDate">Date of sale.</param>
         /// <param name="customer">Customer identification.</param>
         /// <param name="branch">Branch where the sale was made.</param>
-        public Sale(string saleNumber, DateTime saleDate, string customer, string branch)
+        public Sale(string saleNumber, DateTime saleDate, Guid customer, Guid branch)
             : this()
         {
             SaleNumber = saleNumber;
