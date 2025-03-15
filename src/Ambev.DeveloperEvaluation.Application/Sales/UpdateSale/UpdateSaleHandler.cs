@@ -2,8 +2,6 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
 {
