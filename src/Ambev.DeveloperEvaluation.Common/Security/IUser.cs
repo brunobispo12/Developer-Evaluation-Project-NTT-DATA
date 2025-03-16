@@ -11,11 +11,8 @@
         /// <returns>O ID do usuário como uma string.</returns>
         public string Id { get; }
 
-        /// <summary>
-        /// Obtém o nome de usuário.
-        /// </summary>
-        /// <returns>O nome de usuário.</returns>
-        public string Username { get; }
+        public string FirstName { get; }
+        public string LastName { get; }
 
         /// <summary>
         /// Obtém o papel/função do usuário no sistema.
