@@ -1,5 +1,6 @@
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.Domain.ValueObjects;
 using Bogus;
 
 namespace Ambev.DeveloperEvaluation.Unit.Domain.Specifications.TestData;
@@ -16,20 +17,25 @@ public static class ActiveUserSpecificationTestData
     /// The generated users will have valid:
     /// - Email (valid format)
     /// - Password (meeting complexity requirements)
-    /// - FirstName
-    /// - LastName
+    /// - FirstName and LastName (via the Name value object)
     /// - Phone (Brazilian format)
     /// - Role (User)
     /// Status is not set here as it's the main test parameter
     /// </summary>
     private static readonly Faker<User> userFaker = new Faker<User>()
-        .CustomInstantiator(f => new User {
+        .CustomInstantiator(f => new User
+        {
             Email = f.Internet.Email(),
             Password = $"Test@{f.Random.Number(100, 999)}",
-            Username = f.Name.FirstName(),
+            // Set Name using the Name value object
+            Name = new Name
+            {
+                Firstname = f.Name.FirstName(),
+                Lastname = f.Name.LastName()
+            },
             Status = f.PickRandom<UserStatus>(),
             Phone = $"+55{f.Random.Number(11, 99)}{f.Random.Number(100000000, 999999999)}",
-            Role = f.PickRandom<UserRole> ()
+            Role = f.PickRandom<UserRole>()
         });
 
     /// <summary>

@@ -12,9 +12,9 @@ namespace Ambev.DeveloperEvaluation.Unit.Domain;
 public static class CreateUserHandlerTestData
 {
     /// <summary>
-    /// Configures the Faker to generate valid User entities.
-    /// The generated users will have valid:
-    /// - Username (using internet usernames)
+    /// Configures the Faker to generate valid CreateUserCommand entities.
+    /// The generated commands will have valid:
+    /// - FirstName and LastName (using internet names)
     /// - Password (meeting complexity requirements)
     /// - Email (valid format)
     /// - Phone (Brazilian format)
@@ -22,7 +22,8 @@ public static class CreateUserHandlerTestData
     /// - Role (Customer or Admin)
     /// </summary>
     private static readonly Faker<CreateUserCommand> createUserHandlerFaker = new Faker<CreateUserCommand>()
-        .RuleFor(u => u.Username, f => f.Internet.UserName())
+        .RuleFor(u => u.FirstName, f => f.Name.FirstName())
+        .RuleFor(u => u.LastName, f => f.Name.LastName())
         .RuleFor(u => u.Password, f => $"Test@{f.Random.Number(100, 999)}")
         .RuleFor(u => u.Email, f => f.Internet.Email())
         .RuleFor(u => u.Phone, f => $"+55{f.Random.Number(11, 99)}{f.Random.Number(100000000, 999999999)}")
@@ -30,11 +31,11 @@ public static class CreateUserHandlerTestData
         .RuleFor(u => u.Role, f => f.PickRandom(UserRole.Customer, UserRole.Admin));
 
     /// <summary>
-    /// Generates a valid User entity with randomized data.
-    /// The generated user will have all properties populated with valid values
+    /// Generates a valid CreateUserCommand with randomized data.
+    /// The generated command will have all properties populated with valid values
     /// that meet the system's validation requirements.
     /// </summary>
-    /// <returns>A valid User entity with randomly generated data.</returns>
+    /// <returns>A valid CreateUserCommand with randomly generated data.</returns>
     public static CreateUserCommand GenerateValidCommand()
     {
         return createUserHandlerFaker.Generate();
