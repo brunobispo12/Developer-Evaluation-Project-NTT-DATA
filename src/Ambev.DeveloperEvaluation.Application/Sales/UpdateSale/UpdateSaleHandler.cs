@@ -45,12 +45,10 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale
                 throw new InvalidOperationException($"Sale with Id {command.Id} does not exist.");
             }
 
-            // Map the updated data onto the existing sale
             _mapper.Map(command, existingSale);
 
             var updatedSale = await _saleRepository.UpdateAsync(existingSale, cancellationToken);
 
-            // Map the updated sale to the result that wraps a SaleDto
             var result = _mapper.Map<UpdateSaleResult>(updatedSale);
 
             return result;

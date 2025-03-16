@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using MediatR;
 
@@ -53,6 +53,26 @@ namespace Ambev.DeveloperEvaluation.Application.Users.UpdateUser
         /// The user's address details.
         /// </summary>
         public UpdateUserAddress Address { get; set; } = new UpdateUserAddress();
+
+        /// <summary>
+        /// Validates the command using <see cref="UpdateUserCommandValidator"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ValidationResultDetail"/> containing:
+        /// - <c>IsValid</c>: True if all validation rules pass.
+        /// - <c>Errors</c>: A collection of validation errors if any rules fail.
+        /// </returns>
+        public ValidationResultDetail Validate()
+        {
+            var validator = new UpdateUserCommandValidator();
+            var result = validator.Validate(this);
+
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+            };
+        }
     }
 
     /// <summary>
@@ -60,29 +80,10 @@ namespace Ambev.DeveloperEvaluation.Application.Users.UpdateUser
     /// </summary>
     public class UpdateUserAddress
     {
-        /// <summary>
-        /// The city where the user resides.
-        /// </summary>
         public string City { get; set; } = string.Empty;
-
-        /// <summary>
-        /// The street name.
-        /// </summary>
         public string Street { get; set; } = string.Empty;
-
-        /// <summary>
-        /// The street number.
-        /// </summary>
         public int Number { get; set; }
-
-        /// <summary>
-        /// The postal code.
-        /// </summary>
         public string Zipcode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// The geolocation information for the address.
-        /// </summary>
         public UpdateUserGeolocation Geolocation { get; set; } = new UpdateUserGeolocation();
     }
 
@@ -91,14 +92,7 @@ namespace Ambev.DeveloperEvaluation.Application.Users.UpdateUser
     /// </summary>
     public class UpdateUserGeolocation
     {
-        /// <summary>
-        /// The latitude value.
-        /// </summary>
         public string Lat { get; set; } = string.Empty;
-
-        /// <summary>
-        /// The longitude value.
-        /// </summary>
         public string Long { get; set; } = string.Empty;
     }
 }
