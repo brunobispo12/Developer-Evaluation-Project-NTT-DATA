@@ -44,7 +44,7 @@ namespace Ambev.DeveloperEvaluation.Application.Auth.AuthenticateUser
             {
                 Token = token,
                 Email = user.Email,
-                Name = user.Username,
+                Name = $"{user.Name.Firstname} {user.Name.Lastname}",
                 Role = user.Role.ToString()
             };
         }
