@@ -3,6 +3,7 @@ using System;
 using Ambev.DeveloperEvaluation.ORM;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ambev.DeveloperEvaluation.ORM.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20250316005230_AddNameAndAdressFieldsInUser")]
+    partial class AddNameAndAdressFieldsInUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,6 +122,11 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
@@ -145,25 +153,18 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
 
                             b1.Property<string>("City")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("City");
+                                .HasColumnType("text");
 
                             b1.Property<int>("Number")
-                                .HasColumnType("integer")
-                                .HasColumnName("Number");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Street")
                                 .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasColumnName("Street");
+                                .HasColumnType("text");
 
                             b1.Property<string>("Zipcode")
                                 .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("character varying(20)")
-                                .HasColumnName("Zipcode");
+                                .HasColumnType("text");
 
                             b1.HasKey("UserId");
 
@@ -180,15 +181,11 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
 
                                     b2.Property<string>("Lat")
                                         .IsRequired()
-                                        .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)")
-                                        .HasColumnName("Latitude");
+                                        .HasColumnType("text");
 
                                     b2.Property<string>("Long")
                                         .IsRequired()
-                                        .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)")
-                                        .HasColumnName("Longitude");
+                                        .HasColumnType("text");
 
                                     b2.HasKey("AddressUserId");
 
@@ -211,14 +208,12 @@ namespace Ambev.DeveloperEvaluation.ORM.Migrations
                             b1.Property<string>("Firstname")
                                 .IsRequired()
                                 .HasMaxLength(50)
-                                .HasColumnType("character varying(50)")
-                                .HasColumnName("FirstName");
+                                .HasColumnType("character varying(50)");
 
                             b1.Property<string>("Lastname")
                                 .IsRequired()
                                 .HasMaxLength(50)
-                                .HasColumnType("character varying(50)")
-                                .HasColumnName("LastName");
+                                .HasColumnType("character varying(50)");
 
                             b1.HasKey("UserId");
 

@@ -20,6 +20,44 @@ public class DefaultContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+        modelBuilder.Entity<User>(builder =>
+        {
+            builder.OwnsOne(u => u.Name, n =>
+            {
+                n.Property(nn => nn.Firstname)
+                    .HasMaxLength(50)
+                    .IsRequired();
+
+                n.Property(nn => nn.Lastname)
+                    .HasMaxLength(50)
+                    .IsRequired();
+            });
+
+            builder.OwnsOne(u => u.Address, a =>
+            {
+                a.Property(ad => ad.City)
+                    .IsRequired();
+
+                a.Property(ad => ad.Street)
+                    .IsRequired();
+
+                a.Property(ad => ad.Number)
+                    .IsRequired();
+
+                a.Property(ad => ad.Zipcode)
+                    .IsRequired();
+
+                a.OwnsOne(ad => ad.Geolocation, g =>
+                {
+                    g.Property(x => x.Lat)
+                        .IsRequired();
+
+                    g.Property(x => x.Long)
+                        .IsRequired();
+                });
+            });
+        });
+
         modelBuilder.Entity<Sale>()
             .HasKey(s => s.Id);
 
@@ -34,6 +72,7 @@ public class DefaultContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
+
 }
 public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>
 {
