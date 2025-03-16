@@ -8,9 +8,14 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Users.CreateUser;
 public class CreateUserRequest
 {
     /// <summary>
-    /// Gets or sets the username. Must be unique and contain only valid characters.
+    /// Gets or sets the firstname. Must be unique and contain only valid characters.
     /// </summary>
-    public string Username { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the lastname. Must be unique and contain only valid characters.
+    /// </summary>
+    public string LastName { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the password. Must meet security requirements.
