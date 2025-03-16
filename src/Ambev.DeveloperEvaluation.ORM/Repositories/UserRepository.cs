@@ -57,6 +57,29 @@ public class UserRepository : IUserRepository
     }
 
     /// <summary>
+    /// Updates an existing user in the database.
+    /// </summary>
+    /// <param name="user">The user with updated information.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The updated user.</returns>
+    /// <exception cref="KeyNotFoundException">Thrown if the user does not exist in the database.</exception>
+    public async Task<User> UpdateAsync(User user, CancellationToken cancellationToken = default)
+    {
+        var existingUser = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == user.Id, cancellationToken);
+
+        if (existingUser == null)
+        {
+            throw new KeyNotFoundException($"User with ID {user.Id} not found.");
+        }
+
+        _context.Entry(existingUser).CurrentValues.SetValues(user);
+
+        await _context.SaveChangesAsync(cancellationToken);
+        return existingUser;
+    }
+
+    /// <summary>
     /// Deletes a user from the database
     /// </summary>
     /// <param name="id">The unique identifier of the user to delete</param>
