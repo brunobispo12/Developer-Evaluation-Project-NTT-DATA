@@ -1,7 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using MediatR;
-using System.Linq;
 
 namespace Ambev.DeveloperEvaluation.Application.Users.CreateUser
 {
@@ -10,7 +9,7 @@ namespace Ambev.DeveloperEvaluation.Application.Users.CreateUser
     /// </summary>
     /// <remarks>
     /// This command is used to capture the required data for creating a user, 
-    /// including first name, last name, password, phone number, email, status, and role.
+    /// including first name, last name, password, phone number, email, status, role, and address.
     /// It implements <see cref="IRequest{TResponse}"/> to initiate the request 
     /// that returns a <see cref="CreateUserResult"/>.
     /// 
@@ -56,6 +55,15 @@ namespace Ambev.DeveloperEvaluation.Application.Users.CreateUser
         /// </summary>
         public UserRole Role { get; set; }
 
+        /// <summary>
+        /// Gets or sets the address of the user.
+        /// </summary>
+        public CreateUserAddress Address { get; set; } = new CreateUserAddress();
+
+        /// <summary>
+        /// Validates the command using CreateUserCommandValidator.
+        /// </summary>
+        /// <returns>A ValidationResultDetail containing the validation results.</returns>
         public ValidationResultDetail Validate()
         {
             var validator = new CreateUserCommandValidator();
@@ -66,5 +74,52 @@ namespace Ambev.DeveloperEvaluation.Application.Users.CreateUser
                 Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
             };
         }
+    }
+
+    /// <summary>
+    /// Represents the address information for creating a user.
+    /// </summary>
+    public class CreateUserAddress
+    {
+        /// <summary>
+        /// Gets or sets the city.
+        /// </summary>
+        public string City { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the street.
+        /// </summary>
+        public string Street { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the house or building number.
+        /// </summary>
+        public int Number { get; set; }
+
+        /// <summary>
+        /// Gets or sets the zipcode.
+        /// </summary>
+        public string Zipcode { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the geolocation details.
+        /// </summary>
+        public CreateUserGeolocation Geolocation { get; set; } = new CreateUserGeolocation();
+    }
+
+    /// <summary>
+    /// Represents the geolocation information for a user's address.
+    /// </summary>
+    public class CreateUserGeolocation
+    {
+        /// <summary>
+        /// Gets or sets the latitude.
+        /// </summary>
+        public string Lat { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the longitude.
+        /// </summary>
+        public string Long { get; set; } = string.Empty;
     }
 }
